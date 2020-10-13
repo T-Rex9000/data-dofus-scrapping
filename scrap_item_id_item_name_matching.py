@@ -7,8 +7,8 @@ if __name__ == "__main__":
     output_dct = {}
     list_of_items = []
     list_of_url_recipes = []
-    item_types = ["equipements", "armes"]
-    list_nb_pages = [25, 8]
+    item_types = ["equipements", "armes", "idoles"]
+    list_nb_pages = [25, 8, 1]
 
     for item_type, nb_pages in zip(item_types, list_nb_pages):
         for page in range(1, nb_pages + 1):
