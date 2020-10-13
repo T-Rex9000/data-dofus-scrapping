@@ -1,34 +1,50 @@
 from parse_functions import *
+import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
 from random import randint
 import json
 import time
-import os
+from os import listdir
+from os.path import join, isfile
 
 if __name__ == "__main__":
-    main_dct_path = "annuaire.json"
-    data_path = "data"
+    url_lists_path = "./url_lists"
+    out_path = "./data"
 
-    with open(main_dct_path, "r") as f:
-        main_dct = json.load(f)
+    url_lists = listdir(url_lists_path)
 
-    for id, val in tqdm(main_dct.items()):
-        time.sleep(0.2 + randint(1, 10) / 10)
-        url = val["url"]
+    for filename in tqdm(url_lists, desc="List progress"):
+        try:
+            # Load url list
+            tmp_df = pd.read_csv(join(url_lists_path, filename))
 
-        carac_dct = process_perso_caracteristiques(url="https://www.dofus.com" + url + "/caracteristiques")
+            tmp_url_lst = list(tmp_df["url"])
 
-        if carac_dct:
-            date = datetime.today().strftime('%Y-%m-%d')
+            # For every url
+            for url in tmp_url_lst:
+                name_and_id = url.split("/")[-1]
 
-            others_dct = process_perso_main(url="https://www.dofus.com" + url)
+                if isfile(join(out_path, f"{name_and_id}.json")):
+                    continue
 
-            carac_dct.update(others_dct)
+                time.sleep(randint(1, 6) / 10)
 
-            with open(os.path.join(data_path, f"{id}_{date}.json"), "w") as f:
-                json.dump(carac_dct, f)
+                # Scrap caracteristiques
+                carac_dct = process_perso_caracteristiques(url="https://www.dofus.com" + url + "/caracteristiques")
 
+                # If profile is not hidden
+                if carac_dct:
+                    # Scrap other info
+                    others_dct = process_perso_main(url="https://www.dofus.com" + url)
 
-        else:
-            continue
+                    # Merge info
+                    carac_dct.update(others_dct)
+
+                    # Save results
+                    # date = datetime.today().strftime('%Y-%m-%d')
+                    with open(join(out_path, f"{name_and_id}.json"), "w") as f:
+                        json.dump(carac_dct, f)
+
+        except Exception as e:
+            print(e, filename)
