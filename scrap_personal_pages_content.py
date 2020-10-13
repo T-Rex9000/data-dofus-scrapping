@@ -1,6 +1,5 @@
 from parse_functions import *
 import pandas as pd
-from datetime import datetime
 from tqdm import tqdm
 from random import randint
 import json
@@ -15,14 +14,14 @@ if __name__ == "__main__":
     url_lists = listdir(url_lists_path)
 
     for filename in tqdm(url_lists, desc="List progress"):
-        try:
-            # Load url list
-            tmp_df = pd.read_csv(join(url_lists_path, filename))
+        # Load url list
+        tmp_df = pd.read_csv(join(url_lists_path, filename))
 
-            tmp_url_lst = list(tmp_df["url"])
+        tmp_url_lst = list(tmp_df["url"])
 
-            # For every url
-            for url in tmp_url_lst:
+        # For every url
+        for url in tmp_url_lst:
+            try:
                 name_and_id = url.split("/")[-1]
 
                 if isfile(join(out_path, f"{name_and_id}.json")):
@@ -42,9 +41,10 @@ if __name__ == "__main__":
                     carac_dct.update(others_dct)
 
                     # Save results
-                    # date = datetime.today().strftime('%Y-%m-%d')
                     with open(join(out_path, f"{name_and_id}.json"), "w") as f:
                         json.dump(carac_dct, f)
-
-        except Exception as e:
-            print(e, filename)
+                else:
+                    with open(join(out_path, f"{name_and_id}.json"), "w") as f:
+                        json.dump({}, f)
+            except Exception as e:
+                print(e, url)

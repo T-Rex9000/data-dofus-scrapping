@@ -89,36 +89,59 @@ def process_perso_main(url):
     kolis = soup.findAll("div", {"class": "ak-total-kolizeum"})
 
     for koli in kolis:
-        res_dct[f"{koli.text.split(':')[0]}"] = int(koli.find("span").text.replace(" ", "")) if koli.find("span").text not in ["-1",
-                                                                                                                 "-"] else None
+        res_dct[f"{koli.text.split(':')[0]}"] = int(koli.find("span").text.replace(" ", "")) if koli.find(
+            "span").text not in ["-1",
+                                 "-"] else None
 
     xp = soup.find("div", {"class": "ak-total-xp"})
-    xp = xp.find("span").text.replace(" ", "")
 
-    res_dct["xp"] = int(xp) if xp != "-" else None
+    if xp:
+        xp = xp.find("span").text.replace(" ", "")
+        res_dct["xp"] = int(xp) if xp != "-" else None
+    else:
+        res_dct["xp"] = None
 
     success = soup.find("div", {"class": "ak-total-success"})
-    success = success.find("span").text.replace(" ", "")
 
-    res_dct["success"] = int(success) if success != "-" else None
+    if success:
+        success = success.find("span").text.replace(" ", "")
+        res_dct["success"] = int(success) if success != "-" else None
+    else:
+        res_dct["success"] = None
 
     table = soup.find("table", {"class": "ak-container ak-table ak-responsivetable"})
     tds = table.findAll("td")
 
-    res_dct["xp_general_rk"] = int(tds[1].text.replace(" ", "")) if tds[1].text != "-" else None
-    res_dct["xp_breed_rk"] = int(tds[5].text.replace(" ", "")) if tds[5].text != "-" else None
-    res_dct["xp_server_rk"] = int(tds[9].text.replace(" ", "")) if tds[9].text != "-" else None
-    res_dct["xp_breed_server_rk"] = int(tds[13].text.replace(" ", "")) if tds[13].text != "-" else None
+    if len(tds) == 16:
+        res_dct["xp_general_rk"] = int(tds[1].text.replace(" ", "")) if tds[1].text != "-" else None
+        res_dct["xp_breed_rk"] = int(tds[5].text.replace(" ", "")) if tds[5].text != "-" else None
+        res_dct["xp_server_rk"] = int(tds[9].text.replace(" ", "")) if tds[9].text != "-" else None
+        res_dct["xp_breed_server_rk"] = int(tds[13].text.replace(" ", "")) if tds[13].text != "-" else None
 
-    res_dct["koli_general_rk"] = int(tds[2].text.replace(" ", "")) if tds[2].text != "-" else None
-    res_dct["koli_breed_rk"] = int(tds[6].text.replace(" ", "")) if tds[6].text != "-" else None
-    res_dct["koli_server_rk"] = int(tds[10].text.replace(" ", "")) if tds[10].text != "-" else None
-    res_dct["koli_breed_server_rk"] = int(tds[14].text.replace(" ", "")) if tds[14].text != "-" else None
+        res_dct["koli_general_rk"] = int(tds[2].text.replace(" ", "")) if tds[2].text != "-" else None
+        res_dct["koli_breed_rk"] = int(tds[6].text.replace(" ", "")) if tds[6].text != "-" else None
+        res_dct["koli_server_rk"] = int(tds[10].text.replace(" ", "")) if tds[10].text != "-" else None
+        res_dct["koli_breed_server_rk"] = int(tds[14].text.replace(" ", "")) if tds[14].text != "-" else None
 
-    res_dct["success_general_rk"] = int(tds[3].text.replace(" ", "")) if tds[3].text != "-" else None
-    res_dct["success_breed_rk"] = int(tds[7].text.replace(" ", "")) if tds[7].text != "-" else None
-    res_dct["success_server_rk"] = int(tds[11].text.replace(" ", "")) if tds[11].text != "-" else None
-    res_dct["success_breed_server_rk"] = int(tds[15].text.replace(" ", "")) if tds[15].text != "-" else None
+        res_dct["success_general_rk"] = int(tds[3].text.replace(" ", "")) if tds[3].text != "-" else None
+        res_dct["success_breed_rk"] = int(tds[7].text.replace(" ", "")) if tds[7].text != "-" else None
+        res_dct["success_server_rk"] = int(tds[11].text.replace(" ", "")) if tds[11].text != "-" else None
+        res_dct["success_breed_server_rk"] = int(tds[15].text.replace(" ", "")) if tds[15].text != "-" else None
+    else:
+        res_dct["xp_general_rk"] = None
+        res_dct["xp_breed_rk"] = None
+        res_dct["xp_server_rk"] = None
+        res_dct["xp_breed_server_rk"] = None
+
+        res_dct["koli_general_rk"] = None
+        res_dct["koli_breed_rk"] = None
+        res_dct["koli_server_rk"] = None
+        res_dct["koli_breed_server_rk"] = None
+
+        res_dct["success_general_rk"] = None
+        res_dct["success_breed_rk"] = None
+        res_dct["success_server_rk"] = None
+        res_dct["success_breed_server_rk"] = None
 
     res_dct["level"] = int(soup.find("span", {"class": "ak-directories-level"}).text[8:-1])
 
