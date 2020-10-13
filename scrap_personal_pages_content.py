@@ -13,14 +13,14 @@ if __name__ == "__main__":
 
     url_lists = listdir(url_lists_path)
 
-    for filename in tqdm(url_lists, desc="List progress"):
+    for filename in url_lists:
         # Load url list
         tmp_df = pd.read_csv(join(url_lists_path, filename))
 
         tmp_url_lst = list(tmp_df["url"])
 
         # For every url
-        for url in tmp_url_lst:
+        for url in tqdm(tmp_url_lst, desc="List progress"):
             try:
                 name_and_id = url.split("/")[-1]
 
