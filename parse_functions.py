@@ -143,7 +143,7 @@ def process_perso_main(url):
         res_dct["success_server_rk"] = None
         res_dct["success_breed_server_rk"] = None
 
-    res_dct["level"] = int(soup.find("span", {"class": "ak-directories-level"}).text[8:-1])
+    res_dct["level"] = 200 + int(soup.find("span", {"class": "ak-directories-level"}).text[8:-1].replace("Omega ", ""))
 
     return res_dct
 
