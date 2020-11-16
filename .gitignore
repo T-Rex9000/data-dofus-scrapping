@@ -3,3 +3,7 @@
 
 # PyCharm
 .idea/
+
+# Upload to firebase
+toUploadFirebase/
+/service-account-firebase.json
