@@ -1,0 +1,9 @@
+# Virtual Environments
+/.DDSVEnv
+
+# PyCharm
+.idea/
+
+# Upload to firebase
+toUploadFirebase/
+/service-account-firebase.json
