@@ -23,7 +23,12 @@ i = 10
 for json_file in json_files:
     with open(json_file, 'r') as file:
         data = json.load(file)
-        collection.document(json_file.rstem).set(data)
+        if bool(data):
+            # Only upload it if it is not empty
+            user_id = json_file.rstem
+            username = '-'.join(user_id.split('-')[1:])
+            data['username'] = username
+            collection.document(user_id).set(data)
     i += 1
     bar.update()
 bar.end()
